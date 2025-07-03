@@ -5,7 +5,6 @@ import os
 
 app = Flask(__name__)
 
-# Inizializza OpenAI client
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 @app.route("/")
