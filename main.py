@@ -1,9 +1,9 @@
-from flask import Flask
+import flask
 from twilio.twiml.messaging_response import MessagingResponse
 import openai 
 import os
 
-app = Flask(__name__)
+app = flask(__name__)
 
 openai.api_key = os.getenv("OPENROUTER_API_KEY")
 openai.api_base = "https://openrouter.ai/api/v1"
