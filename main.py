@@ -30,16 +30,16 @@ Rispondi al messaggio: {incoming_msg}"""
     ]
 )
  reply = completion.choices[0].message.content.strip()
-    except Exception as e:
+except Exception as e:
         print("⚠️ ERRORE CATTURATO:", e)
         reply = "⚠️ Riprova tra poco 🙏"       
         reply = response['choices'][0]['message']['content']
         msg.body(reply)
 
-    except Exception as e:
+except Exception as e:
         msg.body(f"⚠️ ERRORE CATTURATO: {str(e)}")
 
-    return str(resp)
+return str(resp)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
