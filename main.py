@@ -16,25 +16,20 @@ def whatsapp():
     incoming_msg = request.values.get('Body', '')
     reply = MessagingResponse()
 
-    prompt = f"""Rispondi in italiano come ASSI, l'assistente digitale di Silvia – consulente, coach e docente.
-    Usa empatia, professionalità e un tocco di ironia.
-    Rispondi al messaggio: {incoming_msg}"""
-
     try:
-        response = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "Rispondi in italiano come ASSI, l'assistente digitale di Silvia – consulente, coach e docente. Usa empatia, professionalità e un tocco di ironia."},
-        {"role": "user", "content": incoming_msg}
-    ],
-    max_tokens=150
-)
-risposta = response.choices[0].message.content.strip()
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Rispondi in italiano come ASSI, l'assistente digitale di Silvia – consulente, coach e docente. Usa empatia, professionalità e un tocco di ironia."},
+                {"role": "user", "content": incoming_msg}
+            ],
+            max_tokens=150
+        )
+        risposta = response.choices[0].message.content.strip()
         reply.message(risposta)
     except Exception as e:
-        print("🛑 ERRORE GPT:")
-        traceback.print_exc()
-        reply.message("⚠️ Ops! ASSI sta meditando... riprova tra poco 🌙")
+        reply.message("⚠ Oops! ASSI sta meditando... Riprova tra poco 🙏")
+        print("Errore OpenAI:", e)
 
     return str(reply)
 
