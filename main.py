@@ -27,7 +27,7 @@ def whatsapp():
         }
     ]
 
-    try:
+   try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages,
@@ -37,9 +37,10 @@ def whatsapp():
         risposta = response.choices[0].message.content.strip()
         reply.message(risposta)
     except Exception as e:
-        print("⚠️ ERRORE CATTURATO:", e)
+        import traceback
+        print("⚠️ ERRORE CATTURATO:")
+        traceback.print_exc()  # <<< questa riga stampa tutto l'errore nei log
         reply.message("⚠️ Oops! ASSI sta meditando... Riprova tra poco 🙏")
-
     return str(reply)
 
 if __name__ == "__main__":
