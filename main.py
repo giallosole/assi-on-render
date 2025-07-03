@@ -21,7 +21,7 @@ def whatsapp():
 
     try:
        openai.ChatCompletion.create(
-       model="mistralai/mistral-7b-instruct",  # o "openai/gpt-3.5-turbo"
+       model="openai/gpt-3.5-turbo",  
        messages=[
         {"role": "system", "content": "Sei ASSI, l'assistente di Silvia."},
         {"role": "user", "content": user_message}
