@@ -22,12 +22,14 @@ def whatsapp():
 
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=150,
-            temperature=0.8
-        )
-        risposta = response.choices[0].message.content.strip()
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "Rispondi in italiano come ASSI, l'assistente digitale di Silvia – consulente, coach e docente. Usa empatia, professionalità e un tocco di ironia."},
+        {"role": "user", "content": incoming_msg}
+    ],
+    max_tokens=150
+)
+risposta = response.choices[0].message.content.strip()
         reply.message(risposta)
     except Exception as e:
         print("🛑 ERRORE GPT:")
