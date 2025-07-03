@@ -22,24 +22,23 @@ def whatsapp_reply():
         prompt = f"""Rispondi in italiano come ASSI, l'assistente digitale di Silvia – consulente, coach e docente.
 Usa empatia, professionalità e un tocco di ironia.
 Rispondi al messaggio: {incoming_msg}"""
+
         response = openai.ChatCompletion.create(
-            model="openai/gpt-3.5-turbo-instruct",
-             messages=[
-        {"role": "system", "content": "Sei ASSI, l'assistente di Silvia."},
-        {"role": "user", "content": user_message}
-    ]
-)
- reply = completion.choices[0].message.content.strip()
-except Exception as e:
-        print("⚠️ ERRORE CATTURATO:", e)
-        reply = "⚠️ Riprova tra poco 🙏"       
-        reply = response['choices'][0]['message']['content']
+            model="openai/gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Sei ASSI, l'assistente di Silvia."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        reply = response['choices'][0]['message']['content'].strip()
         msg.body(reply)
 
-except Exception as e:
-        msg.body(f"⚠️ ERRORE CATTURATO: {str(e)}")
+    except Exception as e:
+        print("⚠️ ERRORE CATTURATO:", e)
+        msg.body("⚠️ Riprova tra poco 🙏")
 
-return str(resp)
+    return str(resp)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
