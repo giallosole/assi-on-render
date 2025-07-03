@@ -1,13 +1,12 @@
 from flask import Flask
 from twilio.twiml.messaging_response import MessagingResponse
-from openai import OpenAI
+import openai 
 import os
 
 app = Flask(__name__)
 
-client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY")
+openai.api_key = os.getenv("OPENROUTER_API_KEY")
+openai.api_base = "https://openrouter.ai/api/v1"
 )
 
 @app.route("/")
@@ -21,12 +20,13 @@ def whatsapp():
     msg = response.message()
 
     try:
-        completion = client.chat.completions.create(
-            model="openrouter/gpt-3.5-turbo",  # oppure "mistralai/mistral-7b-instruct"
-            messages=[
-                {"role": "user", "content": incoming_msg}
-            ]
-        )
+       openai.ChatCompletion.create(
+       model="mistralai/mistral-7b-instruct",  # o "openai/gpt-3.5-turbo"
+       messages=[
+        {"role": "system", "content": "Sei ASSI, l'assistente di Silvia."},
+        {"role": "user", "content": user_message}
+    ]
+)
         reply = completion.choices[0].message.content.strip()
     except Exception as e:
         print("⚠️ ERRORE CATTURATO:", e)
