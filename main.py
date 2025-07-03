@@ -5,8 +5,9 @@ import os
 
 app = flask(__name__)
 
-openai.api_key = os.getenv("OPENROUTER_API_KEY")
-openai.api_base = "https://openrouter.ai/api/v1"
+client = OpenAI(
+  base_url="https://openrouter.ai/api/v1",
+  api_key="<OPENROUTER_API_KEY>",
 )
 
 @app.route("/")
@@ -21,12 +22,13 @@ def whatsapp():
 
     try:
        openai.ChatCompletion.create(
-       model="openai/gpt-3.5-turbo",  
+       model="openai/gpt-3.5-turbo-instruct",,  
        messages=[
         {"role": "system", "content": "Sei ASSI, l'assistente di Silvia."},
         {"role": "user", "content": user_message}
     ]
 )
+
         reply = completion.choices[0].message.content.strip()
     except Exception as e:
         print("⚠️ ERRORE CATTURATO:", e)
