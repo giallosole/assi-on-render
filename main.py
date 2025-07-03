@@ -19,7 +19,9 @@ def whatsapp_reply():
     msg = resp.message()
 
     try:
-        # Chiamata a OpenRouter (gpt-3.5-turbo)
+        prompt = f"""Rispondi in italiano come ASSI, l'assistente digitale di Silvia – consulente, coach e docente.
+Usa empatia, professionalità e un tocco di ironia.
+Rispondi al messaggio: {incoming_msg}"""
         response = openai.ChatCompletion.create(
             model="openai/gpt-3.5-turbo-instruct",
              messages=[
@@ -27,6 +29,10 @@ def whatsapp_reply():
         {"role": "user", "content": user_message}
     ]
 )
+ reply = completion.choices[0].message.content.strip()
+    except Exception as e:
+        print("⚠️ ERRORE CATTURATO:", e)
+        reply = "⚠️ Riprova tra poco 🙏"       
         reply = response['choices'][0]['message']['content']
         msg.body(reply)
 
