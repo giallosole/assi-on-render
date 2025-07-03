@@ -2,6 +2,7 @@ from flask import Flask, request
 from openai import OpenAI
 from twilio.twiml.messaging_response import MessagingResponse
 import os
+import traceback
 
 app = Flask(__name__)
 
