@@ -18,33 +18,44 @@ def whatsapp_reply():
     resp = MessagingResponse()
     msg = resp.message()
 
-    try:
+try:
         prompt = f"""Rispondi in italiano come ASSI, l'assistente digitale di Silvia – consulente, coach e docente.
 Usa empatia, professionalità e un tocco di ironia.
 Rispondi al messaggio: {incoming_msg}"""
 
-        def chiedi_openrouter(prompt):
-    headers = {
-        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
-        "Content-Type": "application/json"
-    }
-    
-    data = {
-        "model": "openrouter/openai/gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "Sei ASSI, l'assistente di Silvia."},
-                {"role": "user", "content": prompt}
+        incoming_msg = request.form.get('Body', '')
+        sender = request.form.get('From', '')
+        
+if not incoming_msg:
+return "Messaggio vuoto", 400
+
+        headers = {
+            "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "model": "openrouter/openai/gpt-3.5-turbo",
+            "messages": [
+                {"role": "user", "content": incoming_msg}
             ]
-        )
+        }
 
-        reply = response['choices'][0]['message']['content'].strip()
-        msg.body(reply)
+        response = httpx.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
+        response.raise_for_status()
 
-    except Exception as e:
-        print("⚠️ ERRORE CATTURATO:", e)
-        msg.body("⚠️ Riprova tra poco 🙏")
+        reply = response.json()["choices"][0]["message"]["content"]
 
-    return str(resp)
+        print(f"Messaggio da {sender}: {incoming_msg}")
+        print(f"Risposta: {reply}")
+
+return reply, 200
+
+except Exception as e:
+        print(f"⚠️ ERRORE CATTURATO: {str(e)}")
+        return "⚠️ Oops! ASSI sta meditando... Riprova tra poco 🙏", 200
+
+return str(resp)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
