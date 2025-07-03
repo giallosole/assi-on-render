@@ -1,41 +1,39 @@
-import flask
-from twilio.twiml.messaging_response import MessagingResponse
-import openai 
 import os
+import openai
+from flask import Flask, request
+from twilio.twiml.messaging_response import MessagingResponse
 
-app = flask(__name__)
+openai.api_key = os.getenv("OPENROUTER_API_KEY")
+openai.api_base = "https://openrouter.ai/api/v1"
 
-client = OpenAI(
-  base_url="https://openrouter.ai/api/v1",
-  api_key="<OPENROUTER_API_KEY>",
-)
+app = Flask(__name__)
 
 @app.route("/")
 def index():
     return "ASSI è vivo! 🎉"
-    
+
 @app.route("/whatsapp", methods=["POST"])
-def whatsapp():
-    incoming_msg = request.values.get('Body', '').strip()
-    response = MessagingResponse()
-    msg = response.message()
+def whatsapp_reply():
+    incoming_msg = request.form.get("Body")
+    resp = MessagingResponse()
+    msg = resp.message()
 
     try:
-       openai.ChatCompletion.create(
-       model="openai/gpt-3.5-turbo-instruct",,  
-       messages=[
+        # Chiamata a OpenRouter (gpt-3.5-turbo)
+        response = openai.ChatCompletion.create(
+            model="openai/gpt-3.5-turbo-instruct",
+             messages=[
         {"role": "system", "content": "Sei ASSI, l'assistente di Silvia."},
         {"role": "user", "content": user_message}
     ]
 )
+        reply = response['choices'][0]['message']['content']
+        msg.body(reply)
 
-        reply = completion.choices[0].message.content.strip()
     except Exception as e:
-        print("⚠️ ERRORE CATTURATO:", e)
-        reply = "⚠️ Oops! ASSI sta meditando... Riprova tra poco 🙏"
+        msg.body(f"⚠️ ERRORE CATTURATO: {str(e)}")
 
-    msg.body(reply)
-    return str(response)
+    return str(resp)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    app.run(host="0.0.0.0", port=10000)
