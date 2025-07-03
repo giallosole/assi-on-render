@@ -16,7 +16,6 @@ def whatsapp():
     incoming_msg = request.values.get('Body', '')
     reply = MessagingResponse()
 
-    # Prompt con tono personalizzato
     messages = [
         {
             "role": "system",
