@@ -1,6 +1,6 @@
-import os
-import openai
 from flask import Flask, request
+import os
+import httpx
 from twilio.twiml.messaging_response import MessagingResponse
 
 openai.api_key = os.getenv("OPENROUTER_API_KEY")
