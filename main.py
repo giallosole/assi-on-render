@@ -1,16 +1,19 @@
-from flask import Flask, request
+from flask import Flask
 from twilio.twiml.messaging_response import MessagingResponse
 from openai import OpenAI
 import os
 
 app = Flask(__name__)
 
-# Inizializza il client OpenRouter
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=os.getenv("OPENROUTER_API_KEY")
 )
 
+@app.route("/")
+def index():
+    return "ASSI è vivo! 🎉"
+    
 @app.route("/whatsapp", methods=["POST"])
 def whatsapp():
     incoming_msg = request.values.get('Body', '').strip()
@@ -33,4 +36,4 @@ def whatsapp():
     return str(response)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
