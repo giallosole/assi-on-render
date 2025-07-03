@@ -11,6 +11,16 @@ client = OpenAI(
     openai.api_base = "https://openrouter.ai/api/v1"
 )
 
+response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",  # oppure "gpt-4", "openrouter/mistral" ecc.
+    messages=[
+        {"role": "system", "content": "Sei ASSI, assistente digitale di Silvia."},
+        {"role": "user", "content": incoming_msg}
+    ]
+)
+
+reply_msg = response.choices[0].message["content"]
+
 @app.route("/")
 def home():
     return "✅ ASSI è online tramite OpenRouter!"
