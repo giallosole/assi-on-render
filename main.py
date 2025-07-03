@@ -1,6 +1,6 @@
 from flask import Flask, request
 import os
-import openai
+import httpx
 from twilio.twiml.messaging_response import MessagingResponse
 
 openai.api_key = os.getenv("OPENROUTER_API_KEY")
@@ -23,8 +23,14 @@ def whatsapp_reply():
 Usa empatia, professionalità e un tocco di ironia.
 Rispondi al messaggio: {incoming_msg}"""
 
-        response = openai.ChatCompletion.create(
-            model="openai/gpt-3.5-turbo",
+        def chiedi_openrouter(prompt):
+    headers = {
+        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+        "Content-Type": "application/json"
+    }
+    
+    data = {
+        "model": "openrouter/openai/gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "Sei ASSI, l'assistente di Silvia."},
                 {"role": "user", "content": prompt}
