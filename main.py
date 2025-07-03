@@ -10,14 +10,13 @@ app = Flask(__name__)
 )
 
 response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",  # oppure "gpt-4", "openrouter/mistral" ecc.
+    model="mistralai/mistral-7b-instruct",  # o un altro modello disponibile
     messages=[
-        {"role": "system", "content": "Sei ASSI, assistente digitale di Silvia."},
-        {"role": "user", "content": incoming_msg}
+        {"role": "user", "content": messaggio_utente}
     ]
 )
 
-reply_msg = response.choices[0].message["content"]
+risposta = response['choices'][0]['message']['content']
 
 @app.route("/")
 def home():
