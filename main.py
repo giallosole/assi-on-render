@@ -5,8 +5,6 @@ import os, traceback
 
 app = Flask(__name__)
 
-client = OpenAI(
-    base_url = "https://openrouter.ai/api/v1",
     openai.api_key = os.getenv("OPENROUTER_API_KEY")
     openai.api_base = "https://openrouter.ai/api/v1"
 )
