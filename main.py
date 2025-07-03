@@ -7,7 +7,8 @@ app = Flask(__name__)
 
 client = OpenAI(
     base_url = "https://openrouter.ai/api/v1",
-    api_key  = os.environ.get("OPENROUTER_API_KEY")
+    openai.api_key = os.getenv("OPENROUTER_API_KEY")
+    openai.api_base = "https://openrouter.ai/api/v1"
 )
 
 @app.route("/")
