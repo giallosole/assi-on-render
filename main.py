@@ -1,5 +1,5 @@
 from flask import Flask, request
-from openai import OpenAI
+import openai 
 from twilio.twiml.messaging_response import MessagingResponse
 import os, traceback
 
@@ -32,17 +32,16 @@ def whatsapp():
         {"role": "system", "content": "Rispondi come ASSI, assistente di Silvia: empatico e con ironia."},
         {"role": "user",   "content": msg}
     ]
-
+def ask_openrouter(prompt):
     try:
-        resp = client.chat.completions.create(
-            model="openai/gpt-3.5-turbo",
-            messages=messages,
-            max_tokens=150
+        response = openai.ChatCompletion.create(
+            model="mistralai/mistral-7b-instruct",
+            messages=[{"role": "user", "content": prompt}]
         )
-        reply.message(resp.choices[0].message.content.strip())
-    except Exception:
-        traceback.print_exc()
-        reply.message("⚠️ ASSI sta preparando la prossima risposta... Riprova fra poco")
+        return response['choices'][0]['message']['content']
+    except Exception as e:
+        print("⚠️ ERRORE CATTURATO:", e)
+        return "⚠️ Qualcosa è andato storto con OpenRouter..."
 
     return str(reply)
 
